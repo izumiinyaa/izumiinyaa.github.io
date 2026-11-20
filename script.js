@@ -1,6 +1,13 @@
 (() => {
   'use strict';
 
+  function bolehAnimasiGsap() {
+    return (
+      typeof gsap !== 'undefined' &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+  }
+
   function inisialisasiScrollHalus() {
     if (typeof Lenis === 'undefined') return;
 
@@ -42,10 +49,7 @@
     window.addEventListener('mousemove', (peristiwaMouse) => {
       koordinatX = peristiwaMouse.clientX;
       koordinatY = peristiwaMouse.clientY;
-
-      if (!elemenKursor.classList.contains('cly--is-active')) {
-        elemenKursor.classList.add('cly--is-active');
-      }
+      elemenKursor.classList.add('cly--is-active');
 
       if (!animasiAktif) {
         animasiAktif = true;
@@ -95,10 +99,7 @@
   }
 
   function inisialisasiSplitTeks() {
-    const elemenDaftarTeks = document.querySelectorAll('[data-split-text]');
-    elemenDaftarTeks.forEach((elemenTunggal) => {
-      pisahTeksAksesibel(elemenTunggal);
-    });
+    document.querySelectorAll('[data-split-text]').forEach(pisahTeksAksesibel);
   }
 
   function muatDataProyek() {
@@ -113,34 +114,45 @@
         return responData.json();
       })
       .then((daftarProyek) => {
-        kontainerCarousel.innerHTML = '';
+        const wadahKartu = document.createDocumentFragment();
 
         daftarProyek.forEach((proyekTunggal) => {
           const kartuProyek = document.createElement('div');
+          const labelStatus = proyekTunggal.verified ? ' terverifikasi' : '';
+          const lencanaTerverifikasi = proyekTunggal.verified
+            ? '<img class="cly--verified-badge" src="assets/verified-badge-fill.svg" alt="Terverifikasi" width="18" height="18">'
+            : '';
+
           kartuProyek.className = 'cly--project-card';
           kartuProyek.setAttribute('role', 'group');
-          kartuProyek.setAttribute('aria-label', proyekTunggal.title + ' - ' + proyekTunggal.tag);
+          kartuProyek.setAttribute(
+            'aria-label',
+            proyekTunggal.title + labelStatus + ' - ' + proyekTunggal.tag
+          );
 
           kartuProyek.innerHTML =
             '<div class="cly--project-cover">' +
               '<img class="cly--project-image" src="' + proyekTunggal.image + '" alt="' + proyekTunggal.title + '" width="420" height="520" loading="lazy">' +
               '<div class="cly--project-overlay">' +
                 '<span class="cly--project-tag">' + proyekTunggal.tag + '</span>' +
-                '<h3 class="cly--project-title">' + proyekTunggal.title + '</h3>' +
+                '<div class="cly--project-title-row">' +
+                  '<h3 class="cly--project-title">' + proyekTunggal.title + '</h3>' +
+                  lencanaTerverifikasi +
+                '</div>' +
               '</div>' +
             '</div>';
 
-          kontainerCarousel.appendChild(kartuProyek);
+          wadahKartu.appendChild(kartuProyek);
         });
 
+        kontainerCarousel.replaceChildren(wadahKartu);
         jalankanAnimasiKartuProyek();
       })
       .catch(() => {});
   }
 
   function jalankanAnimasiKartuProyek() {
-    const preferensiGerakBerkurang = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (preferensiGerakBerkurang || typeof gsap === 'undefined') return;
+    if (!bolehAnimasiGsap()) return;
 
     const daftarKartuProyek = document.querySelectorAll('.cly--project-card');
     if (!daftarKartuProyek.length) return;
@@ -156,12 +168,11 @@
   }
 
   function jalankanAnimasiGsap() {
-    const preferensiGerakBerkurang = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (preferensiGerakBerkurang || typeof gsap === 'undefined') return;
+    if (!bolehAnimasiGsap()) return;
 
-    const elemenKataDaftar = document.querySelectorAll('.cly--split-word');
-    if (elemenKataDaftar.length) {
-      gsap.from(elemenKataDaftar, {
+    const daftarKata = document.querySelectorAll('.cly--split-word');
+    if (daftarKata.length) {
+      gsap.from(daftarKata, {
         opacity: 0,
         y: 12,
         duration: 0.55,
@@ -171,13 +182,13 @@
       });
     }
 
-    const daftarKartuTautan = document.querySelectorAll('.cly--link-card');
-    if (daftarKartuTautan.length) {
-      gsap.from(daftarKartuTautan, {
+    const daftarKartu = document.querySelectorAll('.cly--link-card, .cly--tool-item');
+    if (daftarKartu.length) {
+      gsap.from(daftarKartu, {
         opacity: 0,
         y: 16,
         duration: 0.5,
-        stagger: 0.04,
+        stagger: 0.025,
         ease: 'power2.out',
         delay: 0.15,
         clearProps: 'opacity,transform'
@@ -235,7 +246,7 @@
       kontainerCarousel.scrollLeft = posisiScrollAwal - jarakGeser;
     });
 
-    function selesaiMenggeser() {
+    window.addEventListener('mouseup', () => {
       if (!sedangMenggeser) return;
       sedangMenggeser = false;
       kontainerCarousel.classList.remove('cly--is-dragging');
@@ -250,9 +261,7 @@
         }
         requestAnimationFrame(jalankanInersiaScroll);
       }
-    }
-
-    window.addEventListener('mouseup', selesaiMenggeser);
+    });
   }
 
   function inisialisasiUtama() {

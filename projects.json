@@ -3,18 +3,21 @@
     "id": "animepict9",
     "title": "Animepict9",
     "tag": "Community",
-    "image": "assets/animepict9.jpg"
+    "image": "assets/animepict9.jpg",
+    "verified": true
   },
   {
     "id": "manajemen-news",
     "title": "Manajemen News",
     "tag": "Editorial",
-    "image": "assets/manajemennews.png"
+    "image": "assets/manajemennews.png",
+    "verified": false
   },
   {
     "id": "stai-thawalib",
     "title": "STAI Publisistik Thawalib Jakarta",
     "tag": "Web Portal",
-    "image": "assets/staithawalib.png"
+    "image": "assets/staithawalib.png",
+    "verified": false
   }
 ]
