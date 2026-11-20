@@ -1,6 +1,11 @@
 (() => {
   'use strict';
 
+  let instansLenisGlobal = null;
+  let daftarProyekGlobal = [];
+  let posisiScrollBeranda = 0;
+  let sedangTransisi = false;
+
   function bolehAnimasiGsap() {
     return (
       typeof gsap !== 'undefined' &&
@@ -8,10 +13,17 @@
     );
   }
 
+  function aturPosisiScroll(nilaiY) {
+    if (instansLenisGlobal) {
+      instansLenisGlobal.scrollTo(nilaiY, { immediate: true });
+    }
+    window.scrollTo(0, nilaiY);
+  }
+
   function inisialisasiScrollHalus() {
     if (typeof Lenis === 'undefined') return;
 
-    const instansLenis = new Lenis({
+    instansLenisGlobal = new Lenis({
       duration: 1.85,
       easing: (faktorTransisi) => Math.min(1, 1.001 - Math.pow(2, -10 * faktorTransisi)),
       wheelMultiplier: 0.82,
@@ -20,7 +32,7 @@
     });
 
     function langkahAnimasiFrame(waktuFrame) {
-      instansLenis.raf(waktuFrame);
+      instansLenisGlobal.raf(waktuFrame);
       requestAnimationFrame(langkahAnimasiFrame);
     }
 
@@ -41,7 +53,7 @@
     const jarakSumbuY = 18;
     const kekakuanPegas = 0.14;
     const redamanPegas = 0.72;
-    const selektorInteraktif = 'a, .cly--tool-item';
+    const selektorInteraktif = 'a, button, .cly--tool-item';
 
     let targetX = -120;
     let targetY = -120;
@@ -165,90 +177,399 @@
     document.querySelectorAll('[data-split-text]').forEach(pisahTeksAksesibel);
   }
 
-  function muatDataProyek() {
-    const kontainerCarousel = document.getElementById('cly--project-carousel');
-    if (!kontainerCarousel) return;
+  function amankanHtml(teksMentah) {
+    return teksMentah
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
 
-    fetch('projects.json')
+  function konversiIsiMarkdown(teksIsi) {
+    const daftarParagraf = teksIsi.trim().split(/\r?\n\s*\r?\n/);
+
+    return daftarParagraf
+      .map((potonganTeks) => {
+        const barisBersih = potonganTeks.trim();
+        if (!barisBersih) return '';
+
+        if (barisBersih.startsWith('### ')) {
+          return '<h3 class="cly--detail-h3">' + amankanHtml(barisBersih.slice(4).trim()) + '</h3>';
+        }
+        if (barisBersih.startsWith('## ')) {
+          return '<h2 class="cly--detail-h2">' + amankanHtml(barisBersih.slice(3).trim()) + '</h2>';
+        }
+        if (barisBersih.startsWith('> ')) {
+          return '<blockquote class="cly--detail-quote">' + amankanHtml(barisBersih.slice(2).trim()) + '</blockquote>';
+        }
+        return '<p class="cly--detail-p">' + amankanHtml(barisBersih.replace(/\r?\n/g, ' ')) + '</p>';
+      })
+      .join('');
+  }
+
+  function parseMarkdownProyek(teksMarkdown) {
+    const daftarBlok = teksMarkdown.split(/\r?\n===\r?\n/);
+    const hasilProyek = [];
+
+    daftarBlok.forEach((blokMentah) => {
+      const pencocokan = blokMentah
+        .trim()
+        .match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+      if (!pencocokan) return;
+
+      const metaProyek = {};
+      pencocokan[1].split(/\r?\n/).forEach((barisMeta) => {
+        const indeksTitikDua = barisMeta.indexOf(':');
+        if (indeksTitikDua === -1) return;
+        const kunciMeta = barisMeta.slice(0, indeksTitikDua).trim();
+        const nilaiMeta = barisMeta.slice(indeksTitikDua + 1).trim();
+        metaProyek[kunciMeta] = nilaiMeta;
+      });
+
+      if (!metaProyek.id || !metaProyek.title) return;
+
+      hasilProyek.push({
+        id: metaProyek.id,
+        title: metaProyek.title,
+        tag: metaProyek.tag || '',
+        badge: metaProyek.badge || 'none',
+        image: metaProyek.image || '',
+        isiHtml: konversiIsiMarkdown(pencocokan[2] || '')
+      });
+    });
+
+    return hasilProyek;
+  }
+
+  function buatHtmlLencana(jenisLencana, namaKelas) {
+    if (jenisLencana === 'partnership') {
+      return (
+        '<img class="' +
+        namaKelas +
+        '" src="assets/shake-hands-fill.svg" alt="Official Partner" width="18" height="18">'
+      );
+    }
+    if (jenisLencana === 'verified') {
+      return (
+        '<img class="' +
+        namaKelas +
+        '" src="assets/verified-badge-fill.svg" alt="Terverifikasi" width="18" height="18">'
+      );
+    }
+    return '';
+  }
+
+  function buatLabelLencana(jenisLencana) {
+    if (jenisLencana === 'partnership') return ' mitra resmi';
+    if (jenisLencana === 'verified') return ' terverifikasi';
+    return '';
+  }
+
+  function bukaHalamanProyek(proyekDipilih, elemenJudulAsal, perbaruiRiwayat) {
+    if (sedangTransisi || !proyekDipilih) return;
+
+    const halamanBeranda = document.getElementById('cly--home-view');
+    const halamanProyek = document.getElementById('cly--project-view');
+    if (!halamanBeranda || !halamanProyek) return;
+
+    const koordinatJudulAsal = elemenJudulAsal
+      ? elemenJudulAsal.getBoundingClientRect()
+      : null;
+
+    if (!halamanBeranda.hidden) {
+      posisiScrollBeranda = window.scrollY;
+    }
+
+    const htmlLencana = buatHtmlLencana(proyekDipilih.badge, 'cly--detail-badge');
+    const htmlGambar = proyekDipilih.image
+      ? '<div class="cly--detail-media">' +
+          '<img class="cly--detail-image" src="' + amankanHtml(proyekDipilih.image) + '" alt="' + amankanHtml(proyekDipilih.title) + '" width="960" height="600">' +
+        '</div>'
+      : '';
+
+    function tampilkanDetail() {
+      halamanBeranda.hidden = true;
+      halamanProyek.hidden = false;
+      halamanProyek.style.opacity = '1';
+
+      halamanProyek.innerHTML =
+        '<button type="button" class="cly--back-button" aria-label="Kembali ke halaman utama">' +
+          '<i class="ri-arrow-left-line" aria-hidden="true"></i>' +
+          '<span>Back</span>' +
+        '</button>' +
+        '<header class="cly--detail-header">' +
+          '<span class="cly--detail-tag">' + amankanHtml(proyekDipilih.tag) + '</span>' +
+          '<div class="cly--detail-title-row">' +
+            '<h1 id="cly--detail-title" class="cly--detail-title">' + amankanHtml(proyekDipilih.title) + '</h1>' +
+            htmlLencana +
+          '</div>' +
+        '</header>' +
+        htmlGambar +
+        '<div class="cly--detail-body">' +
+          proyekDipilih.isiHtml +
+        '</div>';
+
+      aturPosisiScroll(0);
+
+      const tombolKembali = halamanProyek.querySelector('.cly--back-button');
+      if (tombolKembali) {
+        tombolKembali.addEventListener('click', () => {
+          tutupHalamanProyek(true);
+        });
+      }
+
+      if (perbaruiRiwayat) {
+        try {
+          history.pushState({ proyek: proyekDipilih.id }, '', '?project=' + encodeURIComponent(proyekDipilih.id));
+        } catch {}
+      }
+
+      if (!bolehAnimasiGsap()) {
+        sedangTransisi = false;
+        return;
+      }
+
+      const elemenJudulTujuan = document.getElementById('cly--detail-title');
+      const linimasaDetail = gsap.timeline({
+        onComplete: () => {
+          sedangTransisi = false;
+        }
+      });
+
+      if (elemenJudulTujuan && koordinatJudulAsal) {
+        const koordinatJudulTujuan = elemenJudulTujuan.getBoundingClientRect();
+        const selisihX = koordinatJudulAsal.left - koordinatJudulTujuan.left;
+        const selisihY = koordinatJudulAsal.top - koordinatJudulTujuan.top;
+        const rasioSkala = Math.max(
+          0.42,
+          Math.min(1, koordinatJudulAsal.height / Math.max(1, koordinatJudulTujuan.height))
+        );
+
+        linimasaDetail.fromTo(
+          elemenJudulTujuan,
+          {
+            x: selisihX,
+            y: selisihY,
+            scale: rasioSkala,
+            transformOrigin: 'left top',
+            opacity: 0.9
+          },
+          {
+            x: 0,
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.62,
+            ease: 'back.out(1.22)',
+            clearProps: 'transform,opacity'
+          },
+          0
+        );
+      } else if (elemenJudulTujuan) {
+        linimasaDetail.fromTo(
+          elemenJudulTujuan,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: 'back.out(1.3)',
+            clearProps: 'transform,opacity'
+          },
+          0
+        );
+      }
+
+      const elemenPendukung = halamanProyek.querySelectorAll('.cly--back-button, .cly--detail-tag, .cly--detail-badge');
+      if (elemenPendukung.length) {
+        linimasaDetail.fromTo(
+          elemenPendukung,
+          { opacity: 0, y: 12 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.42,
+            stagger: 0.04,
+            ease: 'power3.out',
+            clearProps: 'transform,opacity'
+          },
+          0.1
+        );
+      }
+
+      const mediaDetail = halamanProyek.querySelector('.cly--detail-media');
+      if (mediaDetail) {
+        linimasaDetail.fromTo(
+          mediaDetail,
+          { opacity: 0, y: 26, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(1.25)',
+            clearProps: 'transform,opacity'
+          },
+          0.18
+        );
+      }
+
+      const elemenIsi = halamanProyek.querySelectorAll('.cly--detail-body > *');
+      if (elemenIsi.length) {
+        linimasaDetail.fromTo(
+          elemenIsi,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.48,
+            stagger: 0.05,
+            ease: 'back.out(1.35)',
+            clearProps: 'transform,opacity'
+          },
+          0.26
+        );
+      }
+    }
+
+    if (elemenJudulAsal && bolehAnimasiGsap() && !halamanBeranda.hidden) {
+      sedangTransisi = true;
+      gsap.to(halamanBeranda, {
+        opacity: 0,
+        y: -14,
+        duration: 0.2,
+        ease: 'power2.in',
+        clearProps: 'transform',
+        onComplete: tampilkanDetail
+      });
+    } else {
+      tampilkanDetail();
+    }
+  }
+
+  function tutupHalamanProyek(perbaruiRiwayat) {
+    if (sedangTransisi) return;
+
+    const halamanBeranda = document.getElementById('cly--home-view');
+    const halamanProyek = document.getElementById('cly--project-view');
+    if (!halamanBeranda || !halamanProyek || halamanProyek.hidden) return;
+
+    function tampilkanBeranda() {
+      halamanProyek.hidden = true;
+      halamanProyek.innerHTML = '';
+      halamanBeranda.hidden = false;
+      aturPosisiScroll(posisiScrollBeranda);
+
+      if (perbaruiRiwayat) {
+        try {
+          history.pushState({}, '', window.location.pathname);
+        } catch {}
+      }
+
+      if (bolehAnimasiGsap()) {
+        gsap.fromTo(
+          halamanBeranda,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.45,
+            ease: 'back.out(1.25)',
+            clearProps: 'transform,opacity',
+            onComplete: () => {
+              sedangTransisi = false;
+            }
+          }
+        );
+      } else {
+        halamanBeranda.style.opacity = '1';
+        sedangTransisi = false;
+      }
+    }
+
+    if (bolehAnimasiGsap()) {
+      sedangTransisi = true;
+      gsap.to(halamanProyek, {
+        opacity: 0,
+        y: 18,
+        duration: 0.22,
+        ease: 'power2.in',
+        clearProps: 'transform',
+        onComplete: tampilkanBeranda
+      });
+    } else {
+      tampilkanBeranda();
+    }
+  }
+
+  function bacaParameterProyekUrl() {
+    return new URLSearchParams(window.location.search).get('project');
+  }
+
+  function muatDataProyek() {
+    const kontainerDaftar = document.getElementById('cly--project-list');
+    if (!kontainerDaftar) return;
+
+    fetch('projects.md')
       .then((responData) => {
         if (!responData.ok) {
           throw new Error('Gagal mengambil data proyek');
         }
-        return responData.json();
+        return responData.text();
       })
-      .then((daftarProyek) => {
-        const wadahKartu = document.createDocumentFragment();
+      .then((teksMarkdown) => {
+        daftarProyekGlobal = parseMarkdownProyek(teksMarkdown);
+        const wadahDaftar = document.createDocumentFragment();
 
-        daftarProyek.forEach((proyekTunggal) => {
-          const kartuProyek = document.createElement('div');
-          const labelStatus = proyekTunggal.verified ? ' terverifikasi' : '';
-          const lencanaTerverifikasi = proyekTunggal.verified
-            ? '<img class="cly--verified-badge" src="assets/verified-badge-fill.svg" alt="Terverifikasi" width="18" height="18">'
-            : '';
+        daftarProyekGlobal.forEach((proyekTunggal) => {
+          const tautanProyek = document.createElement('a');
+          const htmlLencana = buatHtmlLencana(proyekTunggal.badge, 'cly--title-badge');
+          const labelStatus = buatLabelLencana(proyekTunggal.badge);
 
-          kartuProyek.className = 'cly--project-card cly--is-entering-card';
-          kartuProyek.setAttribute('role', 'group');
-          kartuProyek.setAttribute(
+          tautanProyek.className = 'cly--link-card cly--project-item';
+          tautanProyek.href = '?project=' + encodeURIComponent(proyekTunggal.id);
+          tautanProyek.setAttribute('role', 'listitem');
+          tautanProyek.setAttribute(
             'aria-label',
-            proyekTunggal.title + labelStatus + ' - ' + proyekTunggal.tag
+            'Buka detail proyek ' + proyekTunggal.title + labelStatus
           );
 
-          kartuProyek.innerHTML =
-            '<div class="cly--project-cover">' +
-              '<img class="cly--project-image" src="' + proyekTunggal.image + '" alt="' + proyekTunggal.title + '" width="420" height="520" loading="lazy">' +
-              '<div class="cly--project-overlay">' +
-                '<span class="cly--project-tag">' + proyekTunggal.tag + '</span>' +
-                '<div class="cly--project-title-row">' +
-                  '<h3 class="cly--project-title">' + proyekTunggal.title + '</h3>' +
-                  lencanaTerverifikasi +
-                '</div>' +
-              '</div>' +
-            '</div>';
+          tautanProyek.innerHTML =
+            '<div class="cly--card-main">' +
+              '<span class="cly--card-text">' +
+                '<span class="cly--card-title-row">' +
+                  '<span class="cly--card-title cly--project-item-title">' + amankanHtml(proyekTunggal.title) + '</span>' +
+                  htmlLencana +
+                '</span>' +
+                '<span class="cly--card-handle">' + amankanHtml(proyekTunggal.tag) + '</span>' +
+              '</span>' +
+            '</div>' +
+            '<i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>';
 
-          wadahKartu.appendChild(kartuProyek);
+          tautanProyek.addEventListener('click', (peristiwaKlik) => {
+            peristiwaKlik.preventDefault();
+            const elemenJudul = tautanProyek.querySelector('.cly--project-item-title');
+            bukaHalamanProyek(proyekTunggal, elemenJudul, true);
+          });
+
+          wadahDaftar.appendChild(tautanProyek);
         });
 
-        kontainerCarousel.replaceChildren(wadahKartu);
-        jalankanAnimasiKartuProyek();
+        kontainerDaftar.replaceChildren(wadahDaftar);
+
+        const idProyekAwal = bacaParameterProyekUrl();
+        if (idProyekAwal) {
+          const proyekAwal = daftarProyekGlobal.find((item) => item.id === idProyekAwal);
+          if (proyekAwal) {
+            bukaHalamanProyek(proyekAwal, null, false);
+          }
+        }
       })
       .catch(() => {});
   }
 
-  function jalankanAnimasiKartuProyek() {
-    const daftarKartuProyek = document.querySelectorAll('.cly--project-card');
-    if (!daftarKartuProyek.length) return;
-
-    if (!bolehAnimasiGsap()) {
-      daftarKartuProyek.forEach((kartuTunggal) => {
-        kartuTunggal.classList.remove('cly--is-entering-card');
-      });
-      return;
-    }
-
-    gsap.fromTo(
-      daftarKartuProyek,
-      {
-        opacity: 0,
-        x: 36
-      },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.65,
-        stagger: 0.08,
-        ease: 'back.out(1.4)',
-        clearProps: 'opacity,transform',
-        onComplete: () => {
-          daftarKartuProyek.forEach((kartuTunggal) => {
-            kartuTunggal.classList.remove('cly--is-entering-card');
-          });
-        }
-      }
-    );
-  }
-
   function jalankanAnimasiGsap() {
-    if (!bolehAnimasiGsap()) return;
+    if (!bolehAnimasiGsap() || bacaParameterProyekUrl()) return;
 
     document.body.classList.add('cly--is-entering');
 
@@ -400,11 +721,26 @@
     });
   }
 
+  function inisialisasiNavigasiRiwayat() {
+    window.addEventListener('popstate', () => {
+      const idProyekUrl = bacaParameterProyekUrl();
+      if (idProyekUrl) {
+        const proyekCocok = daftarProyekGlobal.find((item) => item.id === idProyekUrl);
+        if (proyekCocok) {
+          bukaHalamanProyek(proyekCocok, null, false);
+          return;
+        }
+      }
+      tutupHalamanProyek(false);
+    });
+  }
+
   function inisialisasiUtama() {
     inisialisasiScrollHalus();
     inisialisasiKursorKustom();
     inisialisasiSplitTeks();
     muatDataProyek();
+    inisialisasiNavigasiRiwayat();
     jalankanAnimasiGsap();
   }
 
