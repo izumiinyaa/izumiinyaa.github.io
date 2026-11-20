@@ -1,0 +1,54 @@
+[
+  {
+    "id": "animepict9",
+    "title": "Animepict9",
+    "tag": "Community & Official Partner",
+    "badge": "partnership",
+    "url": "project/animepict9/",
+    "image": "assets/animepict9.jpg",
+    "imageAlt": "Animepict9 anime wallpaper sharing community artwork",
+    "summary": "An anime community dedicated to curating desktop and mobile wallpapers—static art, GIFs, memes, and Wallpaper Engine—always crediting original creators while hosting community events, game consultations, and open discussions.",
+    "sections": [
+      {
+        "heading": "Curated Visuals & Original Creator Credit",
+        "paragraphs": [
+          "Animepict9 is an anime community focused on sharing high-quality wallpapers across both desktop and mobile formats—spanning static artwork, animated GIFs, memes, and interactive Wallpaper Engine scenes.",
+          "Every visual shared within the community is curated with respect for the artists behind it, always crediting the original creators so talent and craftsmanship stay recognized."
+        ]
+      },
+      {
+        "heading": "Events, Game Consultations & Open Thoughts",
+        "paragraphs": [
+          "Committed to always delivering its best, Animepict9 goes beyond visual curation by regularly organizing community events, interactive game consultation sessions, and welcoming spaces for members to exchange ideas and share thoughts."
+        ],
+        "quote": "A great community celebrates both the art on screen and the creators and members who keep the culture alive."
+      }
+    ]
+  },
+  {
+    "id": "izuna",
+    "title": "Izuna",
+    "tag": "Multi-Creative & Multimedia Project",
+    "badge": "none",
+    "url": "project/izuna/",
+    "image": "assets/izuna.jpg",
+    "imageAlt": "Izuna Crescentia and Beneath the Moonlight multimedia showcase banner",
+    "summary": "A multi-creative multimedia umbrella rooted in Izuna Crescentia—an AI-crafted anime persona with nearly 90% flawless consistency—uniting Beneath the Moonlight, Izunamix, and Clyrove Maid Diary.",
+    "sections": [
+      {
+        "heading": "Izuna Crescentia: Consistent Multi-AI Character Craft",
+        "paragraphs": [
+          "Izuna is a multi-creative project centered around Izuna Crescentia, an original anime character developed across diverse AI workflows achieving nearly 90% visual consistency without flaw."
+        ]
+      },
+      {
+        "heading": "Beneath the Moonlight Ecosystem",
+        "paragraphs": [
+          "Serving as the primary creative umbrella, Beneath the Moonlight unites every multimedia branch born from the Izuna concept into one cohesive creative universe.",
+          "Among its core branches are Izunamix—a complex media player software engineered to automate music playback and audio cues for live gatherings and events—and Clyrove Maid Diary, an ongoing creative diary channel thriving under Beneath the Moonlight."
+        ],
+        "quote": "Beneath the Moonlight connects character identity, automated event audio tooling, and daily storytelling into a single living universe."
+      }
+    ]
+  }
+]
