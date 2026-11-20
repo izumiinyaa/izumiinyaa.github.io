@@ -41,6 +41,7 @@
     const jarakSumbuY = 18;
     const kekakuanPegas = 0.14;
     const redamanPegas = 0.72;
+    const selektorInteraktif = 'a, .cly--tool-item';
 
     let targetX = -120;
     let targetY = -120;
@@ -110,7 +111,7 @@
       }
 
       const targetInteraktif = peristiwaMouse.target instanceof Element
-        ? peristiwaMouse.target.closest('a.cly--link-card, .cly--tool-item, .cly--project-carousel')
+        ? peristiwaMouse.target.closest(selektorInteraktif)
         : null;
       aturStatusKelas('cly--is-hover', Boolean(targetInteraktif));
 
@@ -228,16 +229,14 @@
       daftarKartuProyek,
       {
         opacity: 0,
-        x: 40,
-        scale: 0.92
+        x: 36
       },
       {
         opacity: 1,
         x: 0,
-        scale: 1,
         duration: 0.65,
         stagger: 0.08,
-        ease: 'back.out(1.45)',
+        ease: 'back.out(1.4)',
         clearProps: 'opacity,transform',
         onComplete: () => {
           daftarKartuProyek.forEach((kartuTunggal) => {
@@ -263,16 +262,31 @@
     if (mediaHero) {
       linimasaMasuk.fromTo(
         mediaHero,
-        { opacity: 0, y: 20, scale: 0.94 },
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 0.7,
-          ease: 'back.out(1.35)',
+          duration: 0.65,
+          ease: 'back.out(1.3)',
           clearProps: 'opacity,transform'
         },
         0
+      );
+    }
+
+    const judulHero = document.getElementById('cly--hero-title');
+    if (judulHero) {
+      linimasaMasuk.fromTo(
+        judulHero,
+        { opacity: 0, y: 18 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          ease: 'back.out(1.8)',
+          clearProps: 'opacity,transform'
+        },
+        0.08
       );
     }
 
@@ -280,24 +294,25 @@
     if (daftarKata.length) {
       linimasaMasuk.fromTo(
         daftarKata,
-        { opacity: 0, y: 14, scale: 0.95 },
+        { opacity: 0, y: 12 },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 0.55,
+          duration: 0.5,
           stagger: 0.018,
-          ease: 'back.out(1.75)',
+          ease: 'back.out(1.6)',
           clearProps: 'opacity,transform'
         },
-        0.08
+        0.12
       );
     }
 
     const daftarGrup = document.querySelectorAll('.cly--link-group');
     daftarGrup.forEach((elemenGrup, indeksGrup) => {
-      const waktuMulai = 0.22 + indeksGrup * 0.08;
+      const waktuMulai = 0.24 + indeksGrup * 0.08;
       const judulGrup = elemenGrup.querySelector('.cly--group-label');
+      const paragrafTentang = elemenGrup.querySelector('.cly--about-text');
+      const daftarPengalaman = elemenGrup.querySelectorAll('.cly--experience-item');
       const daftarKartu = elemenGrup.querySelectorAll('.cly--link-card');
       const daftarIkonAlat = elemenGrup.querySelectorAll('.cly--tool-item');
 
@@ -316,17 +331,47 @@
         );
       }
 
-      if (daftarKartu.length) {
+      if (paragrafTentang) {
         linimasaMasuk.fromTo(
-          daftarKartu,
-          { opacity: 0, y: 18, scale: 0.95 },
+          paragrafTentang,
+          { opacity: 0, y: 14 },
           {
             opacity: 1,
             y: 0,
-            scale: 1,
+            duration: 0.5,
+            ease: 'back.out(1.4)',
+            clearProps: 'opacity,transform'
+          },
+          waktuMulai + 0.05
+        );
+      }
+
+      if (daftarPengalaman.length) {
+        linimasaMasuk.fromTo(
+          daftarPengalaman,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.055,
+            ease: 'back.out(1.5)',
+            clearProps: 'opacity,transform'
+          },
+          waktuMulai + 0.05
+        );
+      }
+
+      if (daftarKartu.length) {
+        linimasaMasuk.fromTo(
+          daftarKartu,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
             duration: 0.52,
             stagger: 0.055,
-            ease: 'back.out(1.65)',
+            ease: 'back.out(1.6)',
             clearProps: 'opacity,transform'
           },
           waktuMulai + 0.05
@@ -336,78 +381,21 @@
       if (daftarIkonAlat.length) {
         linimasaMasuk.fromTo(
           daftarIkonAlat,
-          { opacity: 0, y: 14, scale: 0.78 },
+          { opacity: 0, y: 14 },
           {
             opacity: 1,
             y: 0,
-            scale: 1,
-            duration: 0.52,
+            duration: 0.5,
             stagger: {
               each: 0.035,
               grid: [3, 5],
               from: 'start'
             },
-            ease: 'back.out(2)',
+            ease: 'back.out(1.85)',
             clearProps: 'opacity,transform'
           },
           waktuMulai + 0.05
         );
-      }
-    });
-  }
-
-  function inisialisasiGeserDesktop() {
-    const kontainerCarousel = document.getElementById('cly--project-carousel');
-    if (!kontainerCarousel) return;
-
-    let sedangMenggeser = false;
-    let posisiXAwal = 0;
-    let posisiScrollAwal = 0;
-    let kecepatanScroll = 0;
-    let posisiXSebelumnya = 0;
-    let waktuFrameSebelumnya = 0;
-
-    kontainerCarousel.addEventListener('mousedown', (peristiwaMouse) => {
-      sedangMenggeser = true;
-      kontainerCarousel.classList.add('cly--is-dragging');
-      posisiXAwal = peristiwaMouse.clientX;
-      posisiScrollAwal = kontainerCarousel.scrollLeft;
-      posisiXSebelumnya = peristiwaMouse.clientX;
-      waktuFrameSebelumnya = performance.now();
-      kecepatanScroll = 0;
-    });
-
-    window.addEventListener('mousemove', (peristiwaMouse) => {
-      if (!sedangMenggeser) return;
-      peristiwaMouse.preventDefault();
-
-      const posisiXSaatIni = peristiwaMouse.clientX;
-      const waktuSekarang = performance.now();
-      const selisihWaktu = Math.max(1, waktuSekarang - waktuFrameSebelumnya);
-      const selisihX = posisiXSaatIni - posisiXSebelumnya;
-
-      kecepatanScroll = selisihX / selisihWaktu;
-      posisiXSebelumnya = posisiXSaatIni;
-      waktuFrameSebelumnya = waktuSekarang;
-
-      const jarakGeser = posisiXSaatIni - posisiXAwal;
-      kontainerCarousel.scrollLeft = posisiScrollAwal - jarakGeser;
-    });
-
-    window.addEventListener('mouseup', () => {
-      if (!sedangMenggeser) return;
-      sedangMenggeser = false;
-      kontainerCarousel.classList.remove('cly--is-dragging');
-
-      if (Math.abs(kecepatanScroll) > 0.15) {
-        let inersiaKecepatan = kecepatanScroll * -20;
-        function jalankanInersiaScroll() {
-          if (Math.abs(inersiaKecepatan) < 0.45 || sedangMenggeser) return;
-          kontainerCarousel.scrollLeft += inersiaKecepatan;
-          inersiaKecepatan *= 0.93;
-          requestAnimationFrame(jalankanInersiaScroll);
-        }
-        requestAnimationFrame(jalankanInersiaScroll);
       }
     });
   }
@@ -417,7 +405,6 @@
     inisialisasiKursorKustom();
     inisialisasiSplitTeks();
     muatDataProyek();
-    inisialisasiGeserDesktop();
     jalankanAnimasiGsap();
   }
 

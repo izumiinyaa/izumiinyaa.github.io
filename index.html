@@ -90,10 +90,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
 
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="script.js?v=6" defer></script>
+  <script src="script.js?v=7" defer></script>
 </head>
 <body class="cly--body">
   <div id="cly--cursor-pointer" class="cly--cursor-pointer" aria-hidden="true">
@@ -122,7 +122,15 @@
         >
       </div>
 
-      <h1 id="cly--hero-title" class="cly--hero-title" aria-label="A" data-split-text>A</h1>
+      <h1 id="cly--hero-title" class="cly--hero-title">
+        <a
+          class="cly--hero-title-link"
+          href="https://www.youtube.com/watch?v=dBK0gKW61NU&amp;t=213s"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="A — Tonton klip Gawr Gura mengucapkan A di YouTube"
+        >A</a>
+      </h1>
       <p id="cly--hero-bio" class="cly--hero-bio" aria-label="Hey there! Adimas here, maybe some of you know me as izumiinyaa or izu, whatever the nickname is, it works! Thank you for taking the time to come here, feel free to look around." data-split-text>
         Hey there! Adimas here, maybe some of you know me as &ldquo;izumiinyaa&rdquo; or &ldquo;izu&rdquo;, whatever the nickname is, it works! Thank you for taking the time to come here, feel free to look around.
       </p>
@@ -153,59 +161,36 @@
 
       <section class="cly--link-group" aria-labelledby="cly--group-about-me">
         <h2 id="cly--group-about-me" class="cly--group-label">About Me</h2>
-        <div class="cly--group-list">
-          <div class="cly--link-card cly--static-card">
-            <div class="cly--card-main">
-              <i class="ri-user-smile-line cly--card-icon" aria-hidden="true"></i>
-              <span class="cly--card-text">
-                <span class="cly--card-title">Visual &amp; UI/UX Designer</span>
-                <span class="cly--card-handle">Crafting dark surfaces &amp; design systems</span>
-              </span>
-            </div>
-          </div>
-          <div class="cly--link-card cly--static-card">
-            <div class="cly--card-main">
-              <i class="ri-heart-pulse-line cly--card-icon" aria-hidden="true"></i>
-              <span class="cly--card-text">
-                <span class="cly--card-title">Sub-Culture &amp; Creative</span>
-                <span class="cly--card-handle">Balancing anime aesthetics &amp; digital clarity</span>
-              </span>
-            </div>
-          </div>
-        </div>
+        <p class="cly--about-text">
+          I&rsquo;m Adimas, a visual and UI/UX designer focused on dark interfaces, structured design systems, and expressive web interactions. Somewhere between sub-culture aesthetics and clean frontend craft, I enjoy turning ideas into calm, tactile digital spaces.
+        </p>
       </section>
 
       <section class="cly--link-group" aria-labelledby="cly--group-experience">
         <h2 id="cly--group-experience" class="cly--group-label">Experience</h2>
-        <div class="cly--group-list">
-          <div class="cly--link-card cly--static-card">
-            <div class="cly--card-main">
-              <i class="ri-briefcase-line cly--card-icon" aria-hidden="true"></i>
-              <span class="cly--card-text">
-                <span class="cly--card-title">Lead System Architect</span>
-                <span class="cly--card-handle">Clyrove &bull; 2024 &mdash; Present</span>
-              </span>
-            </div>
-          </div>
-          <div class="cly--link-card cly--static-card">
-            <div class="cly--card-main">
-              <i class="ri-palette-line cly--card-icon" aria-hidden="true"></i>
-              <span class="cly--card-text">
-                <span class="cly--card-title">Product Designer &amp; Brand Lead</span>
-                <span class="cly--card-handle">Animepict9 &bull; 2024 &mdash; 2025</span>
-              </span>
-            </div>
-          </div>
-          <div class="cly--link-card cly--static-card">
-            <div class="cly--card-main">
-              <i class="ri-layout-masonry-line cly--card-icon" aria-hidden="true"></i>
-              <span class="cly--card-text">
-                <span class="cly--card-title">Web Architecture Partner</span>
-                <span class="cly--card-handle">Academic &amp; Editorial Portals &bull; 2023 &mdash; 2024</span>
-              </span>
-            </div>
-          </div>
-        </div>
+        <ul class="cly--experience-list" aria-label="Daftar pengalaman kerja">
+          <li class="cly--experience-item">
+            <i class="ri-briefcase-line cly--experience-icon" aria-hidden="true"></i>
+            <span class="cly--card-text">
+              <span class="cly--card-title">Lead System Architect</span>
+              <span class="cly--card-handle">Clyrove &bull; 2024 &mdash; Present</span>
+            </span>
+          </li>
+          <li class="cly--experience-item">
+            <i class="ri-palette-line cly--experience-icon" aria-hidden="true"></i>
+            <span class="cly--card-text">
+              <span class="cly--card-title">Product Designer &amp; Brand Lead</span>
+              <span class="cly--card-handle">Animepict9 &bull; 2024 &mdash; 2025</span>
+            </span>
+          </li>
+          <li class="cly--experience-item">
+            <i class="ri-layout-masonry-line cly--experience-icon" aria-hidden="true"></i>
+            <span class="cly--card-text">
+              <span class="cly--card-title">Web Architecture Partner</span>
+              <span class="cly--card-handle">Academic &amp; Editorial Portals &bull; 2023 &mdash; 2024</span>
+            </span>
+          </li>
+        </ul>
       </section>
 
       <section class="cly--link-group" aria-labelledby="cly--group-tools">
@@ -303,7 +288,7 @@
       <div class="cly--section-header-row">
         <h2 id="cly--group-project" class="cly--group-label">Project</h2>
       </div>
-      <div id="cly--project-carousel" class="cly--project-carousel" role="region" aria-label="Daftar showcase proyek pilihan"></div>
+      <div id="cly--project-carousel" class="cly--project-carousel" role="region" aria-label="Daftar showcase proyek pilihan" data-lenis-prevent></div>
     </section>
 
     <div class="cly--column-container">
