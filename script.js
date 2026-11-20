@@ -146,10 +146,45 @@
     }
   }
 
+  function inisialisasiGeserDesktop() {
+    const kontainerCarousel = document.getElementById('cly--project-carousel');
+    if (!kontainerCarousel) return;
+
+    let sedangMenggeser = false;
+    let posisiXAwal = 0;
+    let posisiScrollAwal = 0;
+
+    kontainerCarousel.addEventListener('mousedown', (peristiwaMouse) => {
+      sedangMenggeser = true;
+      kontainerCarousel.classList.add('cly--is-dragging');
+      posisiXAwal = peristiwaMouse.pageX - kontainerCarousel.offsetLeft;
+      posisiScrollAwal = kontainerCarousel.scrollLeft;
+    });
+
+    kontainerCarousel.addEventListener('mouseleave', () => {
+      sedangMenggeser = false;
+      kontainerCarousel.classList.remove('cly--is-dragging');
+    });
+
+    kontainerCarousel.addEventListener('mouseup', () => {
+      sedangMenggeser = false;
+      kontainerCarousel.classList.remove('cly--is-dragging');
+    });
+
+    kontainerCarousel.addEventListener('mousemove', (peristiwaMouse) => {
+      if (!sedangMenggeser) return;
+      peristiwaMouse.preventDefault();
+      const posisiXSekarang = peristiwaMouse.pageX - kontainerCarousel.offsetLeft;
+      const jarakPergeseran = (posisiXSekarang - posisiXAwal) * 1.35;
+      kontainerCarousel.scrollLeft = posisiScrollAwal - jarakPergeseran;
+    });
+  }
+
   function inisialisasiUtama() {
     inisialisasiScrollHalus();
     inisialisasiSplitTeks();
     muatDataProyek();
+    inisialisasiGeserDesktop();
     jalankanAnimasiGsap();
   }
 

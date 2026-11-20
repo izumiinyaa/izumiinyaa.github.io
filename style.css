@@ -341,20 +341,12 @@ img {
   margin-inline: auto;
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
   margin-bottom: var(--space-010);
   padding-inline: var(--space-004);
 }
 
 .cly--section-header-row .cly--group-label {
   margin-bottom: 0;
-}
-
-.cly--carousel-hint {
-  font-size: 0.6875rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-body);
-  color: var(--color-text-tertiary);
 }
 
 .cly--carousel-wrap {
@@ -375,6 +367,12 @@ img {
   scrollbar-width: none;
   padding-bottom: var(--space-008);
   padding-right: var(--space-040);
+  cursor: grab;
+}
+
+.cly--project-carousel.cly--is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
 }
 
 .cly--project-carousel::-webkit-scrollbar {
