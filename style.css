@@ -139,6 +139,48 @@ img {
   display: block;
 }
 
+.cly--custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: auto;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  will-change: transform;
+}
+
+.cly--custom-cursor.cly--is-active {
+  opacity: 1;
+}
+
+.cly--cursor-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  transition: transform 120ms ease;
+}
+
+.cly--custom-cursor.cly--is-pressed .cly--cursor-image {
+  transform: scale(0.9);
+}
+
+@media (pointer: fine) and (hover: hover) {
+  body.cly--has-custom-cursor,
+  body.cly--has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+@media (pointer: coarse), (hover: none) {
+  .cly--custom-cursor {
+    display: none !important;
+  }
+}
+
 .cly--skip-link {
   position: absolute;
   top: -100%;
@@ -274,6 +316,7 @@ img {
 .cly--link-card {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-014);
   min-height: 3.375rem;
   padding: var(--space-014) var(--space-020);
@@ -293,6 +336,22 @@ img {
 .cly--link-card:active {
   background-color: var(--color-surface-interactive);
   transform: translateY(0);
+}
+
+.cly--static-card {
+  cursor: default;
+}
+
+.cly--static-card:hover {
+  background-color: var(--color-surface-container);
+  transform: none;
+}
+
+.cly--card-main {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-014);
+  min-width: 0;
 }
 
 .cly--card-icon {
@@ -331,6 +390,24 @@ img {
   color: var(--color-text-secondary);
 }
 
+.cly--card-arrow {
+  margin-left: auto;
+  font-size: 1.125rem;
+  line-height: 1;
+  color: var(--color-accent-primary);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 240ms ease,
+    transform 260ms var(--ease-spring);
+  flex-shrink: 0;
+}
+
+.cly--link-card:hover .cly--card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .cly--project-section {
   width: 100%;
   margin-top: var(--space-028);
@@ -362,17 +439,15 @@ img {
   width: calc(100vw - (100vw - 23.5rem) / 2);
   max-width: calc(100vw - (100vw - 23.5rem) / 2);
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-bottom: var(--space-008);
-  padding-right: var(--space-040);
+  padding-right: clamp(16rem, 30vw, 28rem);
   cursor: grab;
 }
 
 .cly--project-carousel.cly--is-dragging {
   cursor: grabbing;
-  scroll-snap-type: none;
 }
 
 .cly--project-carousel::-webkit-scrollbar {
@@ -380,9 +455,8 @@ img {
 }
 
 .cly--project-card {
-  flex: 0 0 17.5rem;
+  flex: 0 0 clamp(17.5rem, 24vw, 20.5rem);
   aspect-ratio: 3 / 4;
-  scroll-snap-align: start;
   position: relative;
   display: flex;
   border-radius: var(--radius-024);
@@ -391,6 +465,8 @@ img {
   border: 0;
   cursor: default;
   pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 .cly--project-cover {
@@ -405,6 +481,8 @@ img {
   height: 100%;
   object-fit: cover;
   object-position: center;
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 .cly--project-overlay {

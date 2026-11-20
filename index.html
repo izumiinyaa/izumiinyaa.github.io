@@ -90,12 +90,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
 
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="script.js?v=3" defer></script>
+  <script src="script.js?v=4" defer></script>
 </head>
 <body class="cly--body">
+  <div id="cly--custom-cursor" class="cly--custom-cursor" aria-hidden="true">
+    <img class="cly--cursor-image" src="assets/cursor.png" alt="" width="34" height="46">
+  </div>
+
   <a class="cly--skip-link" href="#cly--main-content" aria-label="Lewati ke konten utama">Skip to content</a>
 
   <main id="cly--main-content" class="cly--hub-page">
@@ -129,12 +133,114 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi situs utama Clyrove di clyrove.com"
           >
-            <i class="ri-global-line cly--card-icon" aria-hidden="true"></i>
-            <span class="cly--card-text">
-              <span class="cly--card-title">Clyrove</span>
-              <span class="cly--card-handle">clyrove.com</span>
-            </span>
+            <div class="cly--card-main">
+              <i class="ri-global-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Clyrove</span>
+                <span class="cly--card-handle">clyrove.com</span>
+              </span>
+            </div>
+            <i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>
           </a>
+        </div>
+      </section>
+
+      <section class="cly--link-group" aria-labelledby="cly--group-about-me">
+        <h2 id="cly--group-about-me" class="cly--group-label">About Me</h2>
+        <div class="cly--group-list">
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-user-smile-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Visual &amp; UI/UX Designer</span>
+                <span class="cly--card-handle">Crafting dark surfaces &amp; design systems</span>
+              </span>
+            </div>
+          </div>
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-heart-pulse-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Sub-Culture &amp; Creative</span>
+                <span class="cly--card-handle">Balancing anime aesthetics &amp; digital clarity</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cly--link-group" aria-labelledby="cly--group-experience">
+        <h2 id="cly--group-experience" class="cly--group-label">Experience</h2>
+        <div class="cly--group-list">
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-briefcase-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Lead System Architect</span>
+                <span class="cly--card-handle">Clyrove &bull; 2024 &mdash; Present</span>
+              </span>
+            </div>
+          </div>
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-palette-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Product Designer &amp; Brand Lead</span>
+                <span class="cly--card-handle">Animepict9 &bull; 2024 &mdash; 2025</span>
+              </span>
+            </div>
+          </div>
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-layout-masonry-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Web Architecture Partner</span>
+                <span class="cly--card-handle">Academic &amp; Editorial Portals &bull; 2023 &mdash; 2024</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cly--link-group" aria-labelledby="cly--group-tools">
+        <h2 id="cly--group-tools" class="cly--group-label">Tools That I Use</h2>
+        <div class="cly--group-list">
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-figma-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Figma</span>
+                <span class="cly--card-handle">Interface &amp; component system architecture</span>
+              </span>
+            </div>
+          </div>
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-code-s-slash-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">VS Code &amp; Modern Web</span>
+                <span class="cly--card-handle">HTML5, CSS3, modern JS &amp; clean structure</span>
+              </span>
+            </div>
+          </div>
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-sparkling-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">GSAP &amp; Lenis</span>
+                <span class="cly--card-handle">Fluid kinetic motion &amp; smooth inertia scrolling</span>
+              </span>
+            </div>
+          </div>
+          <div class="cly--link-card cly--static-card">
+            <div class="cly--card-main">
+              <i class="ri-github-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Git &amp; GitHub</span>
+                <span class="cly--card-handle">Version workflow &amp; repository hosting</span>
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -148,11 +254,14 @@
             rel="noopener noreferrer"
             aria-label="Gabung grup WhatsApp komunitas Animepict9"
           >
-            <i class="ri-group-line cly--card-icon" aria-hidden="true"></i>
-            <span class="cly--card-text">
-              <span class="cly--card-title">Animepict9</span>
-              <span class="cly--card-handle">whatsapp group</span>
-            </span>
+            <div class="cly--card-main">
+              <i class="ri-group-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Animepict9</span>
+                <span class="cly--card-handle">whatsapp group</span>
+              </span>
+            </div>
+            <i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>
           </a>
 
           <a
@@ -162,11 +271,14 @@
             rel="noopener noreferrer"
             aria-label="Ikuti saluran WhatsApp Clyrove Maid Diary"
           >
-            <i class="ri-whatsapp-line cly--card-icon" aria-hidden="true"></i>
-            <span class="cly--card-text">
-              <span class="cly--card-title">Clyrove Maid Diary</span>
-              <span class="cly--card-handle">whatsapp channel</span>
-            </span>
+            <div class="cly--card-main">
+              <i class="ri-whatsapp-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Clyrove Maid Diary</span>
+                <span class="cly--card-handle">whatsapp channel</span>
+              </span>
+            </div>
+            <i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>
           </a>
         </div>
       </section>
@@ -193,11 +305,14 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi profil Figma resmi @izumiinyaa"
           >
-            <i class="ri-figma-line cly--card-icon" aria-hidden="true"></i>
-            <span class="cly--card-text">
-              <span class="cly--card-title">Figma</span>
-              <span class="cly--card-handle">@izumiinyaa</span>
-            </span>
+            <div class="cly--card-main">
+              <i class="ri-figma-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Figma</span>
+                <span class="cly--card-handle">@izumiinyaa</span>
+              </span>
+            </div>
+            <i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>
           </a>
 
           <a
@@ -207,11 +322,14 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi profil Instagram pribadi @adimasbby"
           >
-            <i class="ri-instagram-line cly--card-icon" aria-hidden="true"></i>
-            <span class="cly--card-text">
-              <span class="cly--card-title">Instagram</span>
-              <span class="cly--card-handle">@adimasbby</span>
-            </span>
+            <div class="cly--card-main">
+              <i class="ri-instagram-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Instagram</span>
+                <span class="cly--card-handle">@adimasbby</span>
+              </span>
+            </div>
+            <i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>
           </a>
 
           <a
@@ -221,11 +339,14 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi profil Instagram resmi Clyrove @clyrove"
           >
-            <i class="ri-instagram-line cly--card-icon" aria-hidden="true"></i>
-            <span class="cly--card-text">
-              <span class="cly--card-title">Instagram</span>
-              <span class="cly--card-handle">@clyrove</span>
-            </span>
+            <div class="cly--card-main">
+              <i class="ri-instagram-line cly--card-icon" aria-hidden="true"></i>
+              <span class="cly--card-text">
+                <span class="cly--card-title">Instagram</span>
+                <span class="cly--card-handle">@clyrove</span>
+              </span>
+            </div>
+            <i class="ri-arrow-right-line cly--card-arrow" aria-hidden="true"></i>
           </a>
         </div>
       </section>
