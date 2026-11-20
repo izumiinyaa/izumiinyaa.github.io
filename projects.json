@@ -1,0 +1,29 @@
+[
+  {
+    "id": "animepict9",
+    "title": "Animepict9",
+    "date": "Nov 2024",
+    "tag": "Community",
+    "image": "assets/animepict9.jpg",
+    "link": "https://chat.whatsapp.com/KaTxvXjHP5c6tEfVRvfPYS",
+    "description": "Komunitas kurasi karya ilustrasi dan diskusi kreatif sub-kultur."
+  },
+  {
+    "id": "manajemen-news",
+    "title": "Manajemen News",
+    "date": "Agu 2024",
+    "tag": "Editorial",
+    "image": "assets/manajemennews.png",
+    "link": "https://clyrove.com",
+    "description": "Portal berita editorial modern dengan identitas visual terukur."
+  },
+  {
+    "id": "stai-thawalib",
+    "title": "STAI Publisistik",
+    "date": "Feb 2025",
+    "tag": "Web Portal",
+    "image": "assets/staithawalib.png",
+    "link": "https://clyrove.com",
+    "description": "Modernisasi portal akademik kampus dan layanan digital mahasiswa."
+  }
+]
