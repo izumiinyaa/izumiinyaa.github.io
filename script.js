@@ -28,49 +28,111 @@
   }
 
   function inisialisasiKursorKustom() {
-    const elemenKursor = document.getElementById('cly--custom-cursor');
-    if (!elemenKursor) return;
+    const elemenPenunjuk = document.getElementById('cly--cursor-pointer');
+    const elemenPendamping = document.getElementById('cly--cursor-companion');
+    if (!elemenPenunjuk || !elemenPendamping) return;
 
     const kueriDesktop = window.matchMedia('(pointer: fine) and (hover: hover)');
     if (!kueriDesktop.matches) return;
 
     document.body.classList.add('cly--has-custom-cursor');
 
-    let koordinatX = -100;
-    let koordinatY = -100;
-    let animasiAktif = false;
+    const jarakSumbuX = 22;
+    const jarakSumbuY = 18;
+    const kekakuanPegas = 0.14;
+    const redamanPegas = 0.72;
 
-    function perbaruiPosisiKursor() {
-      elemenKursor.style.transform =
-        'translate3d(' + (koordinatX - 5) + 'px, ' + (koordinatY - 13) + 'px, 0)';
-      animasiAktif = false;
+    let targetX = -120;
+    let targetY = -120;
+    let posisiX = -120;
+    let posisiY = -120;
+    let kecepatanX = 0;
+    let kecepatanY = 0;
+    let sudahMuncul = false;
+    let pegasBerjalan = false;
+
+    function perbaruiPegasPendamping() {
+      const tujuanX = targetX + jarakSumbuX;
+      const tujuanY = targetY + jarakSumbuY;
+
+      kecepatanX = (kecepatanX + (tujuanX - posisiX) * kekakuanPegas) * redamanPegas;
+      kecepatanY = (kecepatanY + (tujuanY - posisiY) * kekakuanPegas) * redamanPegas;
+
+      posisiX += kecepatanX;
+      posisiY += kecepatanY;
+
+      const sudutMiring = Math.max(-16, Math.min(16, kecepatanX * 1.15));
+      elemenPendamping.style.transform =
+        'translate3d(' +
+        posisiX.toFixed(2) +
+        'px, ' +
+        posisiY.toFixed(2) +
+        'px, 0) rotate(' +
+        sudutMiring.toFixed(2) +
+        'deg)';
+
+      const sisaJarak = Math.abs(tujuanX - posisiX) + Math.abs(tujuanY - posisiY);
+      const sisaKecepatan = Math.abs(kecepatanX) + Math.abs(kecepatanY);
+
+      if (sisaJarak > 0.15 || sisaKecepatan > 0.15) {
+        requestAnimationFrame(perbaruiPegasPendamping);
+      } else {
+        pegasBerjalan = false;
+      }
+    }
+
+    function hidupkanPegas() {
+      if (!pegasBerjalan) {
+        pegasBerjalan = true;
+        requestAnimationFrame(perbaruiPegasPendamping);
+      }
+    }
+
+    function aturStatusKelas(namaKelas, aktif) {
+      elemenPenunjuk.classList.toggle(namaKelas, aktif);
+      elemenPendamping.classList.toggle(namaKelas, aktif);
     }
 
     window.addEventListener('mousemove', (peristiwaMouse) => {
-      koordinatX = peristiwaMouse.clientX;
-      koordinatY = peristiwaMouse.clientY;
-      elemenKursor.classList.add('cly--is-active');
+      targetX = peristiwaMouse.clientX;
+      targetY = peristiwaMouse.clientY;
 
-      if (!animasiAktif) {
-        animasiAktif = true;
-        requestAnimationFrame(perbaruiPosisiKursor);
+      elemenPenunjuk.style.transform =
+        'translate3d(' + (targetX - 4) + 'px, ' + (targetY - 2.5) + 'px, 0)';
+
+      if (!sudahMuncul) {
+        sudahMuncul = true;
+        posisiX = targetX + jarakSumbuX;
+        posisiY = targetY + jarakSumbuY;
+        elemenPendamping.style.transform =
+          'translate3d(' + posisiX + 'px, ' + posisiY + 'px, 0)';
+        aturStatusKelas('cly--is-active', true);
       }
+
+      const targetInteraktif = peristiwaMouse.target instanceof Element
+        ? peristiwaMouse.target.closest('a.cly--link-card, .cly--tool-item, .cly--project-carousel')
+        : null;
+      aturStatusKelas('cly--is-hover', Boolean(targetInteraktif));
+
+      hidupkanPegas();
     });
 
     document.addEventListener('mouseleave', () => {
-      elemenKursor.classList.remove('cly--is-active');
+      aturStatusKelas('cly--is-active', false);
     });
 
     document.addEventListener('mouseenter', () => {
-      elemenKursor.classList.add('cly--is-active');
+      if (sudahMuncul) {
+        aturStatusKelas('cly--is-active', true);
+      }
     });
 
     window.addEventListener('mousedown', () => {
-      elemenKursor.classList.add('cly--is-pressed');
+      aturStatusKelas('cly--is-pressed', true);
     });
 
     window.addEventListener('mouseup', () => {
-      elemenKursor.classList.remove('cly--is-pressed');
+      aturStatusKelas('cly--is-pressed', false);
     });
   }
 
@@ -123,7 +185,7 @@
             ? '<img class="cly--verified-badge" src="assets/verified-badge-fill.svg" alt="Terverifikasi" width="18" height="18">'
             : '';
 
-          kartuProyek.className = 'cly--project-card';
+          kartuProyek.className = 'cly--project-card cly--is-entering-card';
           kartuProyek.setAttribute('role', 'group');
           kartuProyek.setAttribute(
             'aria-label',
@@ -152,60 +214,146 @@
   }
 
   function jalankanAnimasiKartuProyek() {
-    if (!bolehAnimasiGsap()) return;
-
     const daftarKartuProyek = document.querySelectorAll('.cly--project-card');
     if (!daftarKartuProyek.length) return;
 
-    gsap.from(daftarKartuProyek, {
-      opacity: 0,
-      x: 32,
-      duration: 0.65,
-      stagger: 0.09,
-      ease: 'power2.out',
-      clearProps: 'all'
-    });
+    if (!bolehAnimasiGsap()) {
+      daftarKartuProyek.forEach((kartuTunggal) => {
+        kartuTunggal.classList.remove('cly--is-entering-card');
+      });
+      return;
+    }
+
+    gsap.fromTo(
+      daftarKartuProyek,
+      {
+        opacity: 0,
+        x: 40,
+        scale: 0.92
+      },
+      {
+        opacity: 1,
+        x: 0,
+        scale: 1,
+        duration: 0.65,
+        stagger: 0.08,
+        ease: 'back.out(1.45)',
+        clearProps: 'opacity,transform',
+        onComplete: () => {
+          daftarKartuProyek.forEach((kartuTunggal) => {
+            kartuTunggal.classList.remove('cly--is-entering-card');
+          });
+        }
+      }
+    );
   }
 
   function jalankanAnimasiGsap() {
     if (!bolehAnimasiGsap()) return;
 
+    document.body.classList.add('cly--is-entering');
+
+    const linimasaMasuk = gsap.timeline({
+      onComplete: () => {
+        document.body.classList.remove('cly--is-entering');
+      }
+    });
+
+    const mediaHero = document.querySelector('.cly--hero-media');
+    if (mediaHero) {
+      linimasaMasuk.fromTo(
+        mediaHero,
+        { opacity: 0, y: 20, scale: 0.94 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.7,
+          ease: 'back.out(1.35)',
+          clearProps: 'opacity,transform'
+        },
+        0
+      );
+    }
+
     const daftarKata = document.querySelectorAll('.cly--split-word');
     if (daftarKata.length) {
-      gsap.from(daftarKata, {
-        opacity: 0,
-        y: 12,
-        duration: 0.55,
-        stagger: 0.02,
-        ease: 'power2.out',
-        clearProps: 'opacity,transform'
-      });
+      linimasaMasuk.fromTo(
+        daftarKata,
+        { opacity: 0, y: 14, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.55,
+          stagger: 0.018,
+          ease: 'back.out(1.75)',
+          clearProps: 'opacity,transform'
+        },
+        0.08
+      );
     }
 
-    const daftarKartu = document.querySelectorAll('.cly--link-card, .cly--tool-item');
-    if (daftarKartu.length) {
-      gsap.from(daftarKartu, {
-        opacity: 0,
-        y: 16,
-        duration: 0.5,
-        stagger: 0.025,
-        ease: 'power2.out',
-        delay: 0.15,
-        clearProps: 'opacity,transform'
-      });
-    }
+    const daftarGrup = document.querySelectorAll('.cly--link-group');
+    daftarGrup.forEach((elemenGrup, indeksGrup) => {
+      const waktuMulai = 0.22 + indeksGrup * 0.08;
+      const judulGrup = elemenGrup.querySelector('.cly--group-label');
+      const daftarKartu = elemenGrup.querySelectorAll('.cly--link-card');
+      const daftarIkonAlat = elemenGrup.querySelectorAll('.cly--tool-item');
 
-    const daftarJudulGrup = document.querySelectorAll('.cly--group-label');
-    if (daftarJudulGrup.length) {
-      gsap.from(daftarJudulGrup, {
-        opacity: 0,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: 'power1.out',
-        delay: 0.1,
-        clearProps: 'opacity'
-      });
-    }
+      if (judulGrup) {
+        linimasaMasuk.fromTo(
+          judulGrup,
+          { opacity: 0, y: 10 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+            clearProps: 'opacity,transform'
+          },
+          waktuMulai
+        );
+      }
+
+      if (daftarKartu.length) {
+        linimasaMasuk.fromTo(
+          daftarKartu,
+          { opacity: 0, y: 18, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.52,
+            stagger: 0.055,
+            ease: 'back.out(1.65)',
+            clearProps: 'opacity,transform'
+          },
+          waktuMulai + 0.05
+        );
+      }
+
+      if (daftarIkonAlat.length) {
+        linimasaMasuk.fromTo(
+          daftarIkonAlat,
+          { opacity: 0, y: 14, scale: 0.78 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.52,
+            stagger: {
+              each: 0.035,
+              grid: [3, 5],
+              from: 'start'
+            },
+            ease: 'back.out(2)',
+            clearProps: 'opacity,transform'
+          },
+          waktuMulai + 0.05
+        );
+      }
+    });
   }
 
   function inisialisasiGeserDesktop() {
@@ -252,11 +400,11 @@
       kontainerCarousel.classList.remove('cly--is-dragging');
 
       if (Math.abs(kecepatanScroll) > 0.15) {
-        let inersiaKecepatan = kecepatanScroll * -18;
+        let inersiaKecepatan = kecepatanScroll * -20;
         function jalankanInersiaScroll() {
-          if (Math.abs(inersiaKecepatan) < 0.5 || sedangMenggeser) return;
+          if (Math.abs(inersiaKecepatan) < 0.45 || sedangMenggeser) return;
           kontainerCarousel.scrollLeft += inersiaKecepatan;
-          inersiaKecepatan *= 0.92;
+          inersiaKecepatan *= 0.93;
           requestAnimationFrame(jalankanInersiaScroll);
         }
         requestAnimationFrame(jalankanInersiaScroll);

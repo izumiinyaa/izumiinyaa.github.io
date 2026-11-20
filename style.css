@@ -32,11 +32,14 @@
 
   --radius-008: 0.5rem;
   --radius-010: 0.625rem;
+  --radius-016: 1rem;
   --radius-020: 1.25rem;
   --radius-024: 1.5rem;
   --radius-pill: 999rem;
 
-  --ease-spring: linear(0, 0.002 0.2%, 0.008 0.4%, 0.029 0.8%, 0.073 1.3%, 0.13 1.8%, 0.258 2.7%, 0.686 5.4%, 0.807 6.3%, 0.908 7.2%, 0.987 8.1%, 1.051 9.1%, 1.091 10.1%, 1.103 10.6%, 1.112 11.2%, 1.115 11.7%, 1.116 12.2%, 1.112 12.8%, 1.106 13.4%, 1.089 14.5%, 1.033 17.6%, 1.007 19.5%, 0.993 21.2%, 0.987 23.1%, 0.987 25%, 0.998 30.9%, 1.001 35%, 1 46.8%, 1);
+  --ease-effects: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring-fast: linear(0.000, 0.048, 0.168, 0.326, 0.497, 0.662, 0.807, 0.925, 1.014, 1.075, 1.111, 1.125, 1.124, 1.112, 1.093, 1.072, 1.051, 1.031, 1.015, 1.002, 0.993, 0.987, 0.985, 0.984, 0.985, 0.987, 0.990, 0.993, 1.000);
+  --ease-spring-expressive: linear(0.000, 0.048, 0.166, 0.320, 0.484, 0.641, 0.779, 0.891, 0.976, 1.036, 1.072, 1.091, 1.095, 1.089, 1.077, 1.062, 1.047, 1.032, 1.019, 1.009, 1.001, 0.996, 0.993, 0.991, 0.991, 0.992, 0.993, 0.994, 1.000);
 }
 
 *,
@@ -108,6 +111,13 @@ html {
   overflow-x: clip;
 }
 
+.cly--body.cly--is-entering .cly--link-card,
+.cly--body.cly--is-entering .cly--tool-item,
+.cly--body.cly--is-entering .cly--project-card,
+.cly--is-entering-card {
+  transition: none !important;
+}
+
 h1,
 h2,
 h3 {
@@ -126,7 +136,50 @@ img {
   display: block;
 }
 
-.cly--custom-cursor {
+.cly--cursor-pointer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 100000;
+  opacity: 0;
+  transition: opacity 180ms var(--ease-effects);
+  will-change: transform;
+}
+
+.cly--cursor-pointer.cly--is-active {
+  opacity: 1;
+}
+
+.cly--pointer-svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  transform-origin: 4px 3px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  transition: transform 380ms var(--ease-spring-fast);
+}
+
+.cly--pointer-path {
+  fill: var(--color-text-primary);
+  transition: fill 200ms var(--ease-effects);
+}
+
+.cly--cursor-pointer.cly--is-hover .cly--pointer-svg {
+  transform: scale(1.18);
+}
+
+.cly--cursor-pointer.cly--is-hover .cly--pointer-path {
+  fill: var(--color-accent-primary);
+}
+
+.cly--cursor-pointer.cly--is-pressed .cly--pointer-svg {
+  transform: scale(0.84);
+}
+
+.cly--cursor-companion {
   position: fixed;
   top: 0;
   left: 0;
@@ -134,23 +187,28 @@ img {
   pointer-events: none;
   z-index: 99999;
   opacity: 0;
-  transition: opacity 180ms ease;
+  transition: opacity 240ms var(--ease-effects);
   will-change: transform;
 }
 
-.cly--custom-cursor.cly--is-active {
+.cly--cursor-companion.cly--is-active {
   opacity: 1;
 }
 
 .cly--cursor-image {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
-  transition: transform 120ms ease;
+  transform-origin: center bottom;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  transition: transform 420ms var(--ease-spring-fast);
 }
 
-.cly--custom-cursor.cly--is-pressed .cly--cursor-image {
-  transform: scale(0.9);
+.cly--cursor-companion.cly--is-hover .cly--cursor-image {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.cly--cursor-companion.cly--is-pressed .cly--cursor-image {
+  transform: scale(1.14, 0.84) translateY(3px);
 }
 
 @media (pointer: fine) and (hover: hover) {
@@ -161,7 +219,8 @@ img {
 }
 
 @media (pointer: coarse), (hover: none) {
-  .cly--custom-cursor {
+  .cly--cursor-pointer,
+  .cly--cursor-companion {
     display: none !important;
   }
 }
@@ -298,22 +357,27 @@ img {
   background-color: var(--color-surface-container);
   border-radius: var(--radius-010);
   transition:
-    background-color 260ms var(--ease-spring),
-    transform 320ms var(--ease-spring);
+    background-color 220ms var(--ease-effects),
+    border-radius 460ms var(--ease-spring-expressive),
+    transform 460ms var(--ease-spring-fast);
 }
 
 .cly--link-card:hover {
   background-color: var(--color-surface-hover);
-  transform: translateY(-1px);
+  border-radius: var(--radius-016);
+  transform: translateY(-2px) scale(1.015);
 }
 
 .cly--link-card:active {
   background-color: var(--color-surface-interactive);
-  transform: translateY(0);
+  border-radius: var(--radius-008);
+  transform: translateY(0) scale(0.97);
 }
 
-.cly--static-card:hover {
+.cly--static-card:hover,
+.cly--static-card:active {
   background-color: var(--color-surface-container);
+  border-radius: var(--radius-010);
   transform: none;
 }
 
@@ -328,12 +392,20 @@ img {
   font-size: 1.25rem;
   line-height: 1;
   color: var(--color-text-secondary);
-  transition: color 220ms ease;
+  transition:
+    color 200ms var(--ease-effects),
+    transform 420ms var(--ease-spring-fast);
   flex-shrink: 0;
 }
 
 .cly--link-card:hover .cly--card-icon {
   color: var(--color-text-primary);
+  transform: scale(1.12) rotate(-5deg);
+}
+
+.cly--static-card:hover .cly--card-icon {
+  color: var(--color-text-secondary);
+  transform: none;
 }
 
 .cly--card-text {
@@ -363,16 +435,16 @@ img {
   line-height: 1;
   color: var(--color-accent-primary);
   opacity: 0;
-  transform: translateX(-8px);
+  transform: translateX(-10px) scale(0.65);
   transition:
-    opacity 240ms ease,
-    transform 260ms var(--ease-spring);
+    opacity 200ms var(--ease-effects),
+    transform 440ms var(--ease-spring-fast);
   flex-shrink: 0;
 }
 
 .cly--link-card:hover .cly--card-arrow {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0) scale(1);
 }
 
 .cly--tools-grid {
@@ -392,26 +464,34 @@ img {
   border-radius: var(--radius-010);
   color: var(--color-text-secondary);
   transition:
-    background-color 260ms var(--ease-spring),
-    color 220ms ease,
-    transform 320ms var(--ease-spring);
+    background-color 220ms var(--ease-effects),
+    color 200ms var(--ease-effects),
+    border-radius 460ms var(--ease-spring-expressive),
+    transform 440ms var(--ease-spring-fast);
 }
 
 .cly--tool-item:hover,
 .cly--tool-item:focus-visible {
   background-color: var(--color-surface-hover);
   color: var(--color-text-primary);
-  transform: translateY(-1px);
+  border-radius: var(--radius-016);
+  transform: translateY(-3px) scale(1.06);
+}
+
+.cly--tool-item:active {
+  background-color: var(--color-surface-interactive);
+  border-radius: var(--radius-020);
+  transform: scale(0.92);
 }
 
 .cly--tool-item::after {
   content: attr(data-tool-name);
   position: absolute;
-  bottom: calc(100% + 0.375rem);
+  bottom: calc(100% + 0.45rem);
   left: 50%;
-  transform: translate(-50%, 4px);
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-008);
+  transform: translate(-50%, 6px) scale(0.84);
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-pill);
   background-color: var(--color-surface-interactive);
   color: var(--color-text-primary);
   font-size: 0.6875rem;
@@ -419,17 +499,17 @@ img {
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
   transition:
-    opacity 180ms ease,
-    transform 200ms var(--ease-spring);
+    opacity 180ms var(--ease-effects),
+    transform 400ms var(--ease-spring-fast);
   z-index: 10;
 }
 
 .cly--tool-item:hover::after,
 .cly--tool-item:focus-visible::after {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 0) scale(1);
 }
 
 .cly--tool-icon {
@@ -437,6 +517,11 @@ img {
   height: 1.25rem;
   display: block;
   flex-shrink: 0;
+  transition: transform 420ms var(--ease-spring-fast);
+}
+
+.cly--tool-item:hover .cly--tool-icon {
+  transform: scale(1.1);
 }
 
 .cly--project-section {
@@ -464,7 +549,8 @@ img {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-left: max(var(--space-016), calc((100% - 23.5rem) / 2));
-  padding-bottom: var(--space-008);
+  padding-top: var(--space-004);
+  padding-bottom: var(--space-012);
   cursor: grab;
 }
 
@@ -492,6 +578,14 @@ img {
   pointer-events: none;
   -webkit-user-drag: none;
   user-drag: none;
+  transition:
+    transform 520ms var(--ease-spring-expressive),
+    border-radius 520ms var(--ease-spring-expressive);
+}
+
+.cly--project-carousel.cly--is-dragging .cly--project-card {
+  transform: scale(0.975);
+  border-radius: var(--radius-020);
 }
 
 .cly--project-cover {

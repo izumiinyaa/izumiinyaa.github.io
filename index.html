@@ -90,13 +90,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
 
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="script.js?v=5" defer></script>
+  <script src="script.js?v=6" defer></script>
 </head>
 <body class="cly--body">
-  <div id="cly--custom-cursor" class="cly--custom-cursor" aria-hidden="true">
+  <div id="cly--cursor-pointer" class="cly--cursor-pointer" aria-hidden="true">
+    <svg class="cly--pointer-svg" viewBox="0 0 24 24" width="22" height="22">
+      <path class="cly--pointer-path" d="M4.5 2.75L19.25 11.4L12.6 13.15L9.55 19.65L4.5 2.75Z" stroke="#121212" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div id="cly--cursor-companion" class="cly--cursor-companion" aria-hidden="true">
     <img class="cly--cursor-image" src="assets/cursor.png" alt="" width="34" height="46">
   </div>
 
