@@ -88,10 +88,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="script.js" defer></script>
+  <script src="script.js?v=2" defer></script>
 </head>
 <body class="cly--body">
   <a class="cly--skip-link" href="#cly--main-content" aria-label="Lewati ke konten utama">Skip to content</a>
@@ -116,7 +118,7 @@
       </p>
     </section>
 
-    <nav class="cly--link-sections" aria-label="Daftar tautan utama">
+    <div class="cly--column-container">
       <section class="cly--link-group" aria-labelledby="cly--group-main-website">
         <h2 id="cly--group-main-website" class="cly--group-label">Main Website</h2>
         <div class="cly--group-list">
@@ -127,14 +129,7 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi situs utama Clyrove di clyrove.com"
           >
-            <span class="cly--card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9.25"/>
-                <path d="M2.75 12h18.5"/>
-                <path d="M12 2.75a13.5 13.5 0 0 1 0 18.5"/>
-                <path d="M12 2.75a13.5 13.5 0 0 0 0 18.5"/>
-              </svg>
-            </span>
+            <i class="ri-global-line cly--card-icon" aria-hidden="true"></i>
             <span class="cly--card-text">
               <span class="cly--card-title">Clyrove</span>
               <span class="cly--card-handle">clyrove.com</span>
@@ -153,14 +148,7 @@
             rel="noopener noreferrer"
             aria-label="Gabung grup WhatsApp komunitas Animepict9"
           >
-            <span class="cly--card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-            </span>
+            <i class="ri-group-line cly--card-icon" aria-hidden="true"></i>
             <span class="cly--card-text">
               <span class="cly--card-title">Animepict9</span>
               <span class="cly--card-handle">whatsapp group</span>
@@ -174,12 +162,7 @@
             rel="noopener noreferrer"
             aria-label="Ikuti saluran WhatsApp Clyrove Maid Diary"
           >
-            <span class="cly--card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.5 11.7a8.5 8.5 0 0 1-12.56 7.47L3.5 20.5l1.38-4.27A8.5 8.5 0 1 1 20.5 11.7Z"/>
-                <path d="M9.35 8.85c.2-.45.41-.46.6-.47h.52c.17 0 .44.06.67.57.23.51.79 1.92.86 2.06.07.14.12.31.02.5-.1.18-.15.3-.3.47-.14.16-.3.37-.43.5-.14.14-.29.3-.12.58.17.29.74 1.22 1.6 1.98 1.1.98 2.02 1.28 2.31 1.43.29.14.46.12.63-.07.17-.2.73-.85.92-1.14.2-.29.39-.24.66-.14.27.1 1.71.8 2 .95.29.15.48.22.55.34.07.12.07.7-.17 1.38-.24.68-1.42 1.31-1.97 1.38-.52.07-1.18.1-1.9-.12-.44-.14-1-.33-1.72-.64-3.02-1.3-4.99-4.36-5.14-4.56-.15-.2-1.23-1.64-1.23-3.13 0-1.49.78-2.22 1.06-2.52Z"/>
-              </svg>
-            </span>
+            <i class="ri-whatsapp-line cly--card-icon" aria-hidden="true"></i>
             <span class="cly--card-text">
               <span class="cly--card-title">Clyrove Maid Diary</span>
               <span class="cly--card-handle">whatsapp channel</span>
@@ -187,18 +170,20 @@
           </a>
         </div>
       </section>
+    </div>
 
-      <section class="cly--link-group cly--project-section" aria-labelledby="cly--group-project">
-        <div class="cly--section-header-row">
-          <h2 id="cly--group-project" class="cly--group-label">Project</h2>
-          <span class="cly--carousel-hint" aria-hidden="true">Geser untuk melihat</span>
+    <section class="cly--project-section" aria-labelledby="cly--group-project">
+      <div class="cly--section-header-row">
+        <h2 id="cly--group-project" class="cly--group-label">Project</h2>
+        <span class="cly--carousel-hint" aria-hidden="true">Geser untuk melihat</span>
+      </div>
+      <div class="cly--carousel-wrap">
+        <div id="cly--project-carousel" class="cly--project-carousel" role="region" aria-label="Daftar showcase proyek pilihan">
         </div>
-        <div class="cly--carousel-wrap">
-          <div id="cly--project-carousel" class="cly--project-carousel" role="region" aria-label="Daftar carousel proyek pilihan" tabindex="0">
-          </div>
-        </div>
-      </section>
+      </div>
+    </section>
 
+    <div class="cly--column-container">
       <section class="cly--link-group" aria-labelledby="cly--group-maybe-interest">
         <h2 id="cly--group-maybe-interest" class="cly--group-label">Maybe Interest</h2>
         <div class="cly--group-list">
@@ -209,15 +194,7 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi profil Figma resmi @izumiinyaa"
           >
-            <span class="cly--card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9.5 3.5h2.5v5.5H9.5a2.75 2.75 0 0 1 0-5.5Z"/>
-                <path d="M12 3.5h2.5a2.75 2.75 0 0 1 0 5.5H12V3.5Z"/>
-                <path d="M9.5 9H12v5.5H9.5a2.75 2.75 0 0 1 0-5.5Z"/>
-                <path d="M9.5 14.5H12v2.75a2.75 2.75 0 1 1-2.5-2.75Z"/>
-                <circle cx="14.75" cy="11.75" r="2.75"/>
-              </svg>
-            </span>
+            <i class="ri-figma-line cly--card-icon" aria-hidden="true"></i>
             <span class="cly--card-text">
               <span class="cly--card-title">Figma</span>
               <span class="cly--card-handle">@izumiinyaa</span>
@@ -231,13 +208,7 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi profil Instagram pribadi @adimasbby"
           >
-            <span class="cly--card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5.5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-              </svg>
-            </span>
+            <i class="ri-instagram-line cly--card-icon" aria-hidden="true"></i>
             <span class="cly--card-text">
               <span class="cly--card-title">Instagram</span>
               <span class="cly--card-handle">@adimasbby</span>
@@ -251,13 +222,7 @@
             rel="noopener noreferrer"
             aria-label="Kunjungi profil Instagram resmi Clyrove @clyrove"
           >
-            <span class="cly--card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5.5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-              </svg>
-            </span>
+            <i class="ri-instagram-line cly--card-icon" aria-hidden="true"></i>
             <span class="cly--card-text">
               <span class="cly--card-title">Instagram</span>
               <span class="cly--card-handle">@clyrove</span>
@@ -265,7 +230,7 @@
           </a>
         </div>
       </section>
-    </nav>
+    </div>
   </main>
 </body>
 </html>

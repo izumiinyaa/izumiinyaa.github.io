@@ -1,6 +1,24 @@
 (() => {
   'use strict';
 
+  function inisialisasiScrollHalus() {
+    if (typeof Lenis === 'undefined') return;
+
+    const instansLenis = new Lenis({
+      duration: 1.15,
+      easing: (faktorTransisi) => Math.min(1, 1.001 - Math.pow(2, -10 * faktorTransisi)),
+      smoothWheel: true,
+      smoothTouch: false
+    });
+
+    function langkahAnimasiFrame(waktuFrame) {
+      instansLenis.raf(waktuFrame);
+      requestAnimationFrame(langkahAnimasiFrame);
+    }
+
+    requestAnimationFrame(langkahAnimasiFrame);
+  }
+
   function pisahTeksAksesibel(elemenTeks) {
     const teksAsli = elemenTeks.textContent.trim();
     if (!teksAsli) return;
@@ -47,24 +65,18 @@
         kontainerCarousel.innerHTML = '';
 
         daftarProyek.forEach((proyekTunggal) => {
-          const kartuProyek = document.createElement('a');
+          const kartuProyek = document.createElement('div');
           kartuProyek.className = 'cly--project-card';
-          kartuProyek.href = proyekTunggal.link;
-          kartuProyek.target = '_blank';
-          kartuProyek.rel = 'noopener noreferrer';
-          kartuProyek.setAttribute('aria-label', 'Lihat proyek ' + proyekTunggal.title + ' (' + proyekTunggal.tag + ')');
+          kartuProyek.setAttribute('role', 'group');
+          kartuProyek.setAttribute('aria-label', proyekTunggal.title + ' - ' + proyekTunggal.tag);
 
           kartuProyek.innerHTML =
             '<div class="cly--project-cover">' +
-              '<img class="cly--project-image" src="' + proyekTunggal.image + '" alt="' + proyekTunggal.title + '" width="360" height="220" loading="lazy">' +
-              '<span class="cly--project-tag">' + proyekTunggal.tag + '</span>' +
-            '</div>' +
-            '<div class="cly--project-info">' +
-              '<div class="cly--project-header-row">' +
+              '<img class="cly--project-image" src="' + proyekTunggal.image + '" alt="' + proyekTunggal.title + '" width="420" height="520" loading="lazy">' +
+              '<div class="cly--project-overlay">' +
+                '<span class="cly--project-tag">' + proyekTunggal.tag + '</span>' +
                 '<h3 class="cly--project-title">' + proyekTunggal.title + '</h3>' +
-                '<span class="cly--project-date">' + proyekTunggal.date + '</span>' +
               '</div>' +
-              '<p class="cly--project-desc">' + proyekTunggal.description + '</p>' +
             '</div>';
 
           kontainerCarousel.appendChild(kartuProyek);
@@ -84,9 +96,9 @@
 
     gsap.from(daftarKartuProyek, {
       opacity: 0,
-      x: 24,
-      duration: 0.6,
-      stagger: 0.08,
+      x: 32,
+      duration: 0.65,
+      stagger: 0.09,
       ease: 'power2.out',
       clearProps: 'all'
     });
@@ -135,6 +147,7 @@
   }
 
   function inisialisasiUtama() {
+    inisialisasiScrollHalus();
     inisialisasiSplitTeks();
     muatDataProyek();
     jalankanAnimasiGsap();
