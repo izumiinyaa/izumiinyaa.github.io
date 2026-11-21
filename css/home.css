@@ -139,6 +139,42 @@
   gap: var(--space-008);
 }
 
+.cly--group-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-008);
+}
+
+.cly--group-grid .cly--link-card {
+  min-height: 5.5rem;
+  padding: var(--space-014);
+  align-items: flex-start;
+}
+
+.cly--group-grid .cly--card-main {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-010);
+  width: 100%;
+}
+
+.cly--group-grid .cly--card-text {
+  width: 100%;
+}
+
+.cly--group-grid .cly--card-handle {
+  width: 100%;
+  font-size: clamp(0.675rem, 2.8vw, 0.75rem);
+  overflow-wrap: break-word;
+}
+
+.cly--group-grid .cly--card-arrow {
+  position: absolute;
+  top: var(--space-014);
+  right: var(--space-014);
+  margin-left: 0;
+}
+
 .cly--link-card {
   position: relative;
   isolation: isolate;
